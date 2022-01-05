@@ -1,0 +1,2 @@
+export const CHANGE_LANGUAGE = 'CHANGE LANGUAGE';
+export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
