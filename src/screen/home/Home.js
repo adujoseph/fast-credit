@@ -23,23 +23,27 @@ const Dashboard = ({navigation, currentUser}) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
         <Header title={`Welcome, ${name}`} color={Colors.primary} />
-        <FlatList
-          data={HomeData}
-          renderItem={({item}) => <HomeCard item={item} />}
-          keyExtractor={item => item.id.toString()}
-          scrollEventThrottle={32}
-          initialNumToRender={10}
-          contentContainerStyle={{paddingBottom: hp(1)}}
-        />
+        <View style={{height: '50%'}}>
+          <FlatList
+            data={HomeData}
+            renderItem={({item}) => <HomeCard item={item} />}
+            keyExtractor={item => item.id.toString()}
+            scrollEventThrottle={32}
+            initialNumToRender={10}
+            contentContainerStyle={{paddingBottom: hp(1)}}
+          />
+        </View>
         <Text style={[styles.bold]}>Recent Activity</Text>
-        <FlatList
-          data={RecentActivityData}
-          renderItem={({item}) => <RecentActivityCard item={item} />}
-          keyExtractor={item => item.id.toString()}
-          scrollEventThrottle={32}
-          initialNumToRender={10}
-          contentContainerStyle={{paddingBottom: hp(5)}}
-        />
+        <View style={{height: '50%'}}>
+          <FlatList
+            data={RecentActivityData}
+            renderItem={({item}) => <RecentActivityCard item={item} />}
+            keyExtractor={item => item.id.toString()}
+            scrollEventThrottle={32}
+            initialNumToRender={10}
+            contentContainerStyle={{paddingBottom: hp(1)}}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -65,5 +69,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingVertical: hp(1),
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    // width: '100%',
   },
 });

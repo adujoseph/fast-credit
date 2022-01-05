@@ -15,7 +15,7 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 //screens
 import HomeScreen from '../../screen/home/Home';
 import PaymentScreen from '../../screen/payment/Payment';
-import NotificationScreen from '../../screen/notification/Notification';
+import NotificationScreen from '../../screen/history/History';
 import ProfileScreen from '../../screen/profile/ProfileScreen';
 import DetailsScreen from '../../screen/productDetails/ProductDetails';
 //icons

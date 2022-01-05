@@ -16,7 +16,7 @@ import PaymentCard from '../../components/PaymentCard';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {ScrollView} from 'react-native-gesture-handler';
 
-const PaymentScreen = ({navigation}) => {
+const PaymentScreen = () => {
   return (
     <>
       <View style={styles.container}>

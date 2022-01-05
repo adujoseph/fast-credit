@@ -7,7 +7,7 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import Header from '../../components/Header';
 
-const NotificationScreen = () => {
+const HistoryScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Sell History" color={Colors.white} />
@@ -38,7 +38,7 @@ const NotificationScreen = () => {
   );
 };
 
-export default NotificationScreen;
+export default HistoryScreen;
 
 const styles = StyleSheet.create({
   container: {
