@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, StatusBar, Text, SafeAreaView} from 'react-native';
 import {Colors} from '../../constant/theme';
-import {dash} from '../../constant/contant';
+import {dash, register1} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import {connect} from 'react-redux';
@@ -78,6 +78,10 @@ const LoginScreen = ({navigation, activeUser}) => {
     navigation.navigate(dash, {user: foundUser});
   };
 
+  const routeHandler = () => {
+    navigation.navigate(register1);
+  };
+
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -97,10 +101,7 @@ const LoginScreen = ({navigation, activeUser}) => {
           <View
             style={{
               width: '100%',
-              backgroundColor: 'lightgray',
-              borderTopRightRadius: hp(1.5),
-              borderTopLeftRadius: hp(1.5),
-              padding: hp(2),
+              // padding: hp(2),
               elevation: 3,
             }}>
             <TextField
@@ -117,10 +118,7 @@ const LoginScreen = ({navigation, activeUser}) => {
           <View
             style={{
               width: '100%',
-              backgroundColor: Colors.white,
-              borderBottomRightRadius: hp(1.5),
-              borderBottomLeftRadius: hp(1.5),
-              padding: hp(2),
+              // padding: hp(2),
               elevation: 3,
             }}>
             <TextField
@@ -174,6 +172,7 @@ const LoginScreen = ({navigation, activeUser}) => {
             title="Create Account"
             bgColor={Colors.white}
             txtColor={Colors.primary}
+            onPress={routeHandler}
           />
         </View>
       </SafeAreaView>
@@ -201,6 +200,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   btns: {
+    marginTop: hp(2),
     padding: hp(2),
     width: '100%',
     justifyContent: 'center',

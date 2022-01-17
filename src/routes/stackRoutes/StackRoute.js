@@ -1,10 +1,13 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import SplashScreen from '../../screen/splashScreen/SplashScreen';
-import LoginScreen from '../../screen/login/index';
+import WelcomeScreen from '../../screen/welcome/index';
 import LoginScreen2 from '../../screen/loginScreen/LoginScreen';
+import RegisterScreen1 from '../../screen/register1/Register1';
+import RegisterScreen2 from '../../screen/register2/Register2';
+import FacialRecScreen from '../../screen/facial/FacialRecognition';
 import BottomStack from '../bottomRoutes';
-import {splash, dash, login, loginscreen} from '../../constant/contant';
+import {splash, dash, login, loginscreen, register1, register2, facial} from '../../constant/contant';
 import {Colors} from '../../constant/theme';
 
 const RootStack = createStackNavigator();
@@ -32,7 +35,7 @@ const RootStackScreen = () => (
     />
     <RootStack.Screen
       name={login}
-      component={LoginScreen}
+      component={WelcomeScreen}
       options={{
         headerTransparent: true,
         headerTitle: '',
@@ -42,6 +45,33 @@ const RootStackScreen = () => (
     <RootStack.Screen
       name={loginscreen}
       component={LoginScreen2}
+      options={{
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: Colors.primary,
+      }}
+    />
+      <RootStack.Screen
+      name={register1}
+      component={RegisterScreen1}
+      options={{
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: Colors.primary,
+      }}
+    />
+      <RootStack.Screen
+      name={register2}
+      component={RegisterScreen2}
+      options={{
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: Colors.primary,
+      }}
+    />
+    <RootStack.Screen
+      name={facial}
+      component={FacialRecScreen}
       options={{
         headerTransparent: true,
         headerTitle: '',

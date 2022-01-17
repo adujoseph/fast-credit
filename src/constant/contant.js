@@ -9,3 +9,6 @@ export const dash = 'Dashboard';
 export const login = 'Login';
 export const loginscreen = 'LoginScreen';
 export const payment = 'Payment';
+export const register1 = "Register1";
+export const register2 = "Register2";
+export const facial = "Facial";

@@ -5,28 +5,41 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import {connect} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
-import {Dash, loginscreen} from '../../constant/contant';
+import {Dash, loginscreen, register1} from '../../constant/contant';
 import CustomButton from '../../components/Button';
+import Video from 'react-native-video';
 
 const LoginScreen = ({navigation, currentLang}) => {
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.topHalf}>
+          <Video
+          source={require("../../../assets/videos/bgvideo.mp4")}
+          style={StyleSheet.absoluteFill}
+          muted={true}
+          repeat={false}
+          resizeMode={"cover"}
+          rate={1.0}
+          ignoreSilentSwitch={"obey"}
+        />
+
+        {/* <View style={styles.topHalf}>
           <Image
             source={require('../../../assets/images/bg1.png')}
             style={{width: '100%', resizeMode: 'contain'}}
           />
-        </View>
+
+        </View> */}
+        <View style={{flex: 0.7}}></View>
         <View style={styles.bottomHalf}>
           <View style={styles.btns}>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Text style={styles.title}>Welcome to FastCredit</Text>
               <Text style={styles.subtitle}>
                 Need to Fuel your dreams? Get up to 3 million in less than 24
                 hours
               </Text>
-            </View>
+            </View> */}
 
             <CustomButton
               title="Login Now"
@@ -41,6 +54,7 @@ const LoginScreen = ({navigation, currentLang}) => {
               bgColor={Colors.white}
               txtColor={Colors.primary}
               borderColor={Colors.primary}
+               onPress={() => navigation.navigate(register1)}
             />
           </View>
         </View>
@@ -69,7 +83,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   bottomHalf: {
-    flex: 0.55,
+    flex: 0.3,
     alignSelf: 'center',
     justifyContent: 'center',
     width: '90%',
@@ -91,5 +105,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: Colors.gray,
     paddingVertical: hp(1),
+  },
+    backgroundVideo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
 });
