@@ -5,7 +5,7 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import {connect} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
-import {Dash, loginscreen, register1} from '../../constant/contant';
+import {Dash, loginscreen, phone, register1} from '../../constant/contant';
 import CustomButton from '../../components/Button';
 import Video from 'react-native-video';
 
@@ -13,14 +13,14 @@ const LoginScreen = ({navigation, currentLang}) => {
   return (
     <>
       <View style={styles.container}>
-          <Video
-          source={require("../../../assets/videos/bgvideo.mp4")}
+        <Video
+          source={require('../../../assets/videos/bgvideo.mp4')}
           style={StyleSheet.absoluteFill}
           muted={true}
           repeat={false}
-          resizeMode={"cover"}
+          resizeMode={'cover'}
           rate={1.0}
-          ignoreSilentSwitch={"obey"}
+          ignoreSilentSwitch={'obey'}
         />
 
         {/* <View style={styles.topHalf}>
@@ -54,7 +54,7 @@ const LoginScreen = ({navigation, currentLang}) => {
               bgColor={Colors.white}
               txtColor={Colors.primary}
               borderColor={Colors.primary}
-               onPress={() => navigation.navigate(register1)}
+              onPress={() => navigation.navigate(phone)}
             />
           </View>
         </View>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     color: Colors.gray,
     paddingVertical: hp(1),
   },
-    backgroundVideo: {
+  backgroundVideo: {
     position: 'absolute',
     top: 0,
     left: 0,

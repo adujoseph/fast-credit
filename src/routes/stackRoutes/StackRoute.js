@@ -3,11 +3,21 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SplashScreen from '../../screen/splashScreen/SplashScreen';
 import WelcomeScreen from '../../screen/welcome/index';
 import LoginScreen2 from '../../screen/loginScreen/LoginScreen';
+import AuthScreen from '../../screen/phoneAuth/PhoneAuth';
 import RegisterScreen1 from '../../screen/register1/Register1';
 import RegisterScreen2 from '../../screen/register2/Register2';
 import FacialRecScreen from '../../screen/facial/FacialRecognition';
 import BottomStack from '../bottomRoutes';
-import {splash, dash, login, loginscreen, register1, register2, facial} from '../../constant/contant';
+import {
+  splash,
+  dash,
+  login,
+  loginscreen,
+  register1,
+  register2,
+  facial,
+  phone,
+} from '../../constant/contant';
 import {Colors} from '../../constant/theme';
 
 const RootStack = createStackNavigator();
@@ -51,7 +61,17 @@ const RootStackScreen = () => (
         headerTintColor: Colors.primary,
       }}
     />
-      <RootStack.Screen
+    <RootStack.Screen
+      name={phone}
+      component={AuthScreen}
+      options={{
+        headerShown: false,
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: Colors.primary,
+      }}
+    />
+    <RootStack.Screen
       name={register1}
       component={RegisterScreen1}
       options={{
@@ -60,7 +80,7 @@ const RootStackScreen = () => (
         headerTintColor: Colors.primary,
       }}
     />
-      <RootStack.Screen
+    <RootStack.Screen
       name={register2}
       component={RegisterScreen2}
       options={{

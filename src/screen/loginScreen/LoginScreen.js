@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, StatusBar, Text, SafeAreaView} from 'react-native';
 import {Colors} from '../../constant/theme';
-import {dash, register1} from '../../constant/contant';
+import {dash, phone, register1} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import {connect} from 'react-redux';
@@ -13,7 +13,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {activeUser} from '../../store/actions/UserAction/UserAction';
 
 const LoginScreen = ({navigation, activeUser}) => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('08093443109');
   const [isEmail, setIsEmail] = useState(false);
   const [password, setPassword] = useState('');
   const [isPassword, setIsPassword] = useState(false);
@@ -63,23 +63,11 @@ const LoginScreen = ({navigation, activeUser}) => {
   };
 
   const submitHandler = () => {
-    const foundUser = usersList.find(
-      user => user.email.toLowerCase() === email.toLocaleLowerCase(),
-    );
-    if (foundUser === undefined) {
-      setErrorMessage('email or password incorrect');
-      return;
-    }
-    if (password !== 'password') {
-      setErrorMessage('email or password incorrect');
-      return;
-    }
-    activeUser(foundUser);
-    navigation.navigate(dash, {user: foundUser});
+    navigation.navigate(dash);
   };
 
   const routeHandler = () => {
-    navigation.navigate(register1);
+    navigation.navigate(phone);
   };
 
   return (

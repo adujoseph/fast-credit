@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, SafeAreaView, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import TextField from '../../components/TextField';
 import CustomButton from '../../components/Button';
 import {Colors} from '../../constant/theme';
@@ -7,6 +13,7 @@ import {dash, register2} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 
+const sexOption = ['Male', 'Female'];
 const RegisterScreen1 = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [isEmail, setIsEmail] = useState(false);
@@ -76,7 +83,7 @@ const RegisterScreen1 = ({navigation}) => {
           label="Phone Number"
           value={email}
           onChangeText={text => setEmail(text)}
-          placeholder="Phone Number"
+          placeholder="Transaction Pin"
           validated={isEmail}
           onFocus={() => onFocusHandler('email')}
           onBlur={() => handleValidation('email')}
@@ -92,6 +99,13 @@ const RegisterScreen1 = ({navigation}) => {
           onBlur={() => handleValidation('email')}
           iconName="lock-closed"
         />
+        <View style={{flexDirection: 'row'}}>
+          {sexOption.map((s, i) => (
+            <TouchableOpacity key={i} style={styles.option}>
+              <Text style={styles.optionText}>{s}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         <CustomButton
           title="Continue"
           bgColor={Colors.primary}
@@ -115,5 +129,17 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: rf(2.3),
     fontWeight: 'bold',
+  },
+  option: {
+    padding: hp(2),
+    backgroundColor: '#f4f6f5',
+    borderRadius: hp(1),
+    borderColor: 'lightgray',
+    borderWidth: 1,
+    width: '45%',
+    marginLeft: hp(1),
+  },
+  optionText: {
+    fontSize: rf(2.3),
   },
 });

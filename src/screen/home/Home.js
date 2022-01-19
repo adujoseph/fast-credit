@@ -18,11 +18,11 @@ import RecentActivityCard from './components/RecentActivityCard';
 import {connect} from 'react-redux';
 
 const Dashboard = ({navigation, currentUser}) => {
-  const {name} = currentUser;
+  // const {name} = currentUser;
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.wrapper}>
-        <Header title={`Welcome, ${name}`} color={Colors.primary} />
+        <Header title={`Welcome,`} color={Colors.primary} />
         <View style={{height: '50%'}}>
           <FlatList
             data={HomeData}
