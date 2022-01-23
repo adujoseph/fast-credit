@@ -7,19 +7,57 @@ import {register1, login, loginscreen} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthScreen = ({navigation}) => {
   const [confirm, setConfirm] = useState({});
   const [email, setEmail] = useState('');
   const [code, setCode] = useState();
-  const onFocusHandler = () => {};
+  const [phone, setPhone] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const onFocusHandler = () => {
+    setErrorMessage('');
+  };
   const handleValidation = () => {};
-  const submitHandler = () => {
-    setConfirm({email});
+
+  const submitHandler = async () => {
+    setErrorMessage('');
+    if (!phone) {
+      setErrorMessage('Please enter a phone number');
+      return;
+    }
+    let phonenumber = `+234${Number(phone)}`;
+    setLoading(true);
+    try {
+      const confirmation = await auth().signInWithPhoneNumber(phonenumber);
+      setLoading(false);
+      setConfirm(confirmation);
+    } catch (err) {
+      setLoading(false);
+      setErrorMessage(err.message);
+    }
   };
-  const confirmHandler = () => {
-    navigation.navigate(register1);
+  const confirmHandler = async () => {
+    setErrorMessage('');
+    let phonenumber = `+234${Number(phone)}`;
+    if (code === '') {
+      setErrorMessage('enter code');
+      return;
+    }
+    setLoading(true);
+    try {
+      const {user} = await confirm.confirm(code);
+      await AsyncStorage.setItem('number', phonenumber);
+      navigation.navigate(register1, {phonenumber});
+    } catch (err) {
+      setLoading(false);
+      setErrorMessage(err.message);
+    }
   };
+
   if (Object.keys(confirm).length) {
     return (
       <View style={styles.container}>
@@ -36,7 +74,7 @@ const AuthScreen = ({navigation}) => {
             console.log(`Code is ${code}, you are good to go!`);
           }}
         />
-        <TouchableOpacity onPress={() => null}>
+        <TouchableOpacity onPress={() => submitHandler()}>
           <Text
             style={{
               color: Colors.primary,
@@ -51,8 +89,9 @@ const AuthScreen = ({navigation}) => {
           bgColor={Colors.primary}
           txtColor={Colors.white}
           onPress={confirmHandler}
+          isLoading={loading}
         />
-        <TouchableOpacity onPress={() => null}>
+        <TouchableOpacity onPress={() => setConfirm({})}>
           <Text style={{textAlign: 'center', color: Colors.primary}}>
             Change Number
           </Text>
@@ -66,23 +105,31 @@ const AuthScreen = ({navigation}) => {
         <Text>Enter Phone Number</Text>
         <TextField
           label="Create Password"
-          value={email}
-          onChangeText={text => setEmail(text)}
+          value={phone}
+          onChangeText={text => setPhone(text)}
           placeholder="Phone Number"
           keyboardType="number-pad"
           //   validated={isEmail}
-          onFocus={() => onFocusHandler('email')}
+          onFocus={() => onFocusHandler()}
           onBlur={() => handleValidation('email')}
           iconName="phone-portrait"
         />
+        <View style={{paddingHorizontal: hp(1)}}>
+          <Text style={{color: 'red'}}>{errorMessage}</Text>
+        </View>
         <CustomButton
           title="Continue"
           bgColor={Colors.primary}
           txtColor={Colors.white}
           onPress={submitHandler}
+          isLoading={loading}
         />
-        <TouchableOpacity onPress={() => navigation.navigate(loginscreen)}>
-          <Text>Already have an account? Login</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate(loginscreen)}
+          style={{marginTop: hp(1.5)}}>
+          <Text style={{color: Colors.primary}}>
+            Already have an account? Login
+          </Text>
         </TouchableOpacity>
       </View>
     </>

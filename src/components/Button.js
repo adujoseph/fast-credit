@@ -1,9 +1,21 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 
-const CustomButton = ({title, bgColor, txtColor, onPress, borderColor}) => {
+const CustomButton = ({
+  title,
+  bgColor,
+  txtColor,
+  onPress,
+  borderColor,
+  isLoading,
+}) => {
   return (
     <>
       <TouchableOpacity
@@ -15,7 +27,11 @@ const CustomButton = ({title, bgColor, txtColor, onPress, borderColor}) => {
           },
         ]}
         onPress={onPress}>
-        <Text style={[styles.btnText, {color: txtColor}]}>{title}</Text>
+        {isLoading ? (
+          <ActivityIndicator size="large" color={txtColor} />
+        ) : (
+          <Text style={[styles.btnText, {color: txtColor}]}>{title}</Text>
+        )}
       </TouchableOpacity>
     </>
   );

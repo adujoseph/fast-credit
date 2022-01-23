@@ -7,6 +7,9 @@ import AuthScreen from '../../screen/phoneAuth/PhoneAuth';
 import RegisterScreen1 from '../../screen/register1/Register1';
 import RegisterScreen2 from '../../screen/register2/Register2';
 import FacialRecScreen from '../../screen/facial/FacialRecognition';
+import ForgotPasswordScreen from '../../screen/forgotPassword/ForgotPassword';
+import ResetPasswordScreen from '../../screen/resetPassword/ResetPassword';
+import TermsScreen from '../../screen/terms/Terms';
 import BottomStack from '../bottomRoutes';
 import {
   splash,
@@ -17,6 +20,9 @@ import {
   register2,
   facial,
   phone,
+  forgot,
+  reset,
+  terms,
 } from '../../constant/contant';
 import {Colors} from '../../constant/theme';
 
@@ -92,6 +98,33 @@ const RootStackScreen = () => (
     <RootStack.Screen
       name={facial}
       component={FacialRecScreen}
+      options={{
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: Colors.primary,
+      }}
+    />
+    <RootStack.Screen
+      name={forgot}
+      component={ForgotPasswordScreen}
+      options={{
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: Colors.primary,
+      }}
+    />
+    <RootStack.Screen
+      name={reset}
+      component={ResetPasswordScreen}
+      options={{
+        headerTransparent: true,
+        headerTitle: '',
+        headerTintColor: Colors.primary,
+      }}
+    />
+    <RootStack.Screen
+      name={terms}
+      component={TermsScreen}
       options={{
         headerTransparent: true,
         headerTitle: '',

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "947388266853",
+    "project_id": "fast-credit-c0064",
+    "storage_bucket": "fast-credit-c0064.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947388266853:android:1218d782f549a4fd62c98c",
+        "android_client_info": {
+          "package_name": "com.fastcredit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947388266853-2vletogrv8j3qh6vlm5iqlm4rt0kojn9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fastcredit",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "947388266853-ji6u48m5r0mobrnki8t2sh3nm41ju0cv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBedkDyAGadVirMDtwQJYtgbQV_Rs-z07E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947388266853-ji6u48m5r0mobrnki8t2sh3nm41ju0cv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

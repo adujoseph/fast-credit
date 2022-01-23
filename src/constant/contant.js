@@ -13,3 +13,6 @@ export const register1 = 'Register1';
 export const register2 = 'Register2';
 export const facial = 'Facial';
 export const phone = 'Phone';
+export const forgot = 'Forgot';
+export const reset = 'Reset';
+export const terms = 'Terms';

@@ -1,21 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, StatusBar, Text, SafeAreaView} from 'react-native';
 import {Colors} from '../../constant/theme';
-import {dash, forgot, phone, register1} from '../../constant/contant';
+import {dash, phone, register1} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import Axios from '../../utils/Axios';
 import CustomButton from '../../components/Button';
 import TextField from '../../components/TextField';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {activeUser} from '../../store/actions/UserAction/UserAction';
-import {post_request, get_request} from '../../services/makeRequest';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = ({navigation, activeUser}) => {
+const ResetPasswordScreen = ({navigation, activeUser}) => {
   const [email, setEmail] = useState('08093443109');
   const [isEmail, setIsEmail] = useState(false);
   const [password, setPassword] = useState('');
@@ -24,23 +21,20 @@ const LoginScreen = ({navigation, activeUser}) => {
   const [usersList, setUsersList] = useState([]);
   const [rem, setRem] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      getPhoneNumber();
-    });
-    return unsubscribe;
-  }, [navigation]);
+    fetchUserList();
+  }, []);
 
-  const getPhoneNumber = async () => {
+  const fetchUserList = async () => {
     try {
-      const number = await AsyncStorage.setItem('number');
-      if (number !== undefined) {
-        setPhoneNumber(number);
-      }
+      const url = 'https://jsonplaceholder.typicode.com/users';
+      const response = await axios.get(url);
+      setUsersList(response.data);
     } catch (err) {
-      console.log(err);
+      setErrorMessage('Error in connection, try again');
+      console.log('Fetch User Error: ', err);
     }
   };
 
@@ -62,63 +56,24 @@ const LoginScreen = ({navigation, activeUser}) => {
 
   const onFocusHandler = arg => {
     setErrorMessage('');
-    if (arg === 'phone') {
-      setPhoneNumber('');
+    if (arg === 'email') {
+      setEmail('');
     }
     if (arg === 'password') {
       setPassword('');
     }
   };
 
-  const submitHandler = async () => {
-    if (phoneNumber === '') {
-      setErrorMessage('phone number field cannot be empty');
-      return;
-    }
-    if (password === '') {
-      setErrorMessage('password field cannot be empty');
-      return;
-    }
-    setLoading(true);
-    const phone = `0${Number(phoneNumber)}` || `234${Number(phoneNumber)}`;
-
-    try {
-      let url = '/applogin';
-      let payload = {
-        phone,
-        password,
-      };
-      const response = await post_request(url, payload);
-      if (response) {
-        getUserByPhone(phone);
-        setLoading(false);
-      }
-    } catch (err) {
-      console.log('My Error: ', err);
-      setLoading(false);
-    }
-    //navigation.navigate(dash);
-  };
-
-  const getUserByPhone = async phone => {
-    try {
-      const url = `/GetUserByPhone/${phone}`;
-      const response = await get_request(url);
-      if (response) {
-        console.log(response);
-        navigation.navigate(dash);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+  const submitHandler = () => {
+    navigation.navigate(dash);
   };
 
   const routeHandler = () => {
     navigation.navigate(phone);
   };
 
-  const forgotHandler = () => {
-    navigation.navigate(forgot);
+  const handleChangeText = async item => {
+    // setPhone(item);
   };
 
   return (
@@ -126,14 +81,15 @@ const LoginScreen = ({navigation, activeUser}) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.btns}>
           <View style={{width: '100%'}}>
-            <Text style={styles.sectionTitle}>Keep connected</Text>
+            <Text style={styles.sectionTitle}>Reset Password</Text>
             <Text
               style={{
                 width: '80%',
                 paddingVertical: hp(4),
                 lineHeight: hp(3.5),
               }}>
-              Enter your phone number and password to get access to your account
+              Enter your reset code and new password to get access to your
+              account
             </Text>
           </View>
           <View
@@ -143,14 +99,33 @@ const LoginScreen = ({navigation, activeUser}) => {
               elevation: 3,
             }}>
             <TextField
-              label="Email phone number"
-              value={phoneNumber}
-              onChangeText={text => setPhoneNumber(text)}
-              placeholder="Enter phone number"
+              label="Email Address"
+              value={email}
+              onChangeText={text => setEmail(text)}
+              placeholder="Enter Reset Code"
               validated={isEmail}
               onFocus={() => onFocusHandler('email')}
-              // onBlur={() => handleValidation('email')}
-              iconName="phone-portrait"
+              onBlur={() => handleValidation('email')}
+              secureTextEntry={true}
+              iconName="lock-closed-outline"
+            />
+          </View>
+          <View
+            style={{
+              width: '100%',
+              // padding: hp(2),
+              elevation: 3,
+            }}>
+            <TextField
+              label="Email Address"
+              value={email}
+              onChangeText={text => setEmail(text)}
+              placeholder="Enter New Password"
+              validated={isEmail}
+              onFocus={() => onFocusHandler('email')}
+              onBlur={() => handleValidation('email')}
+              secureTextEntry={true}
+              iconName="lock-closed-outline"
             />
           </View>
           <View
@@ -163,35 +138,13 @@ const LoginScreen = ({navigation, activeUser}) => {
               label="Password"
               value={password}
               onChangeText={text => setPassword(text)}
-              placeholder="Enter password"
+              placeholder="Confirm New Password"
               validated={isPassword}
-              onFocus={() => onFocusHandler('email')}
-              // onBlur={() => handleValidation('password')}
+              onFocus={() => setPassword('')}
+              onBlur={() => handleValidation('password')}
               iconName="lock-closed-outline"
               secureTextEntry={true}
             />
-          </View>
-          <View style={styles.addon}>
-            <TouchableOpacity
-              onPress={() => setRem(!rem)}
-              style={{flexDirection: 'row'}}>
-              {rem ? (
-                <MaterialCommunityIcons
-                  name="checkbox-marked-circle"
-                  size={15}
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  name="checkbox-blank-circle-outline"
-                  size={15}
-                />
-              )}
-              <Text style={{paddingLeft: 10}}>Remember me</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={forgotHandler}>
-              <Text> Forget Password ?</Text>
-            </TouchableOpacity>
           </View>
           <View>
             {errorMessage ? (
@@ -201,16 +154,10 @@ const LoginScreen = ({navigation, activeUser}) => {
             )}
           </View>
           <CustomButton
-            title="Get Login"
+            title="Reset Password"
             bgColor={Colors.primary}
             txtColor={Colors.white}
             onPress={submitHandler}
-          />
-          <CustomButton
-            title="Create Account"
-            bgColor={Colors.white}
-            txtColor={Colors.primary}
-            onPress={routeHandler}
           />
         </View>
       </SafeAreaView>
@@ -222,7 +169,7 @@ const mapStateToProps = state => {
     currentLang: state.user.setLanguage,
   };
 };
-export default connect(mapStateToProps, {activeUser})(LoginScreen);
+export default connect(mapStateToProps, {activeUser})(ResetPasswordScreen);
 
 const styles = StyleSheet.create({
   container: {
