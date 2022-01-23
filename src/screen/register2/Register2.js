@@ -12,25 +12,58 @@ import {Colors} from '../../constant/theme';
 import {dash, facial} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
+import {get_request} from '../../services/makeRequest';
 
-const RegisterScreen2 = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [isEmail, setIsEmail] = useState(false);
-  const [password, setPassword] = useState('');
-  const [isPassword, setIsPassword] = useState(false);
+const RegisterScreen2 = ({navigation, route}) => {
+  const [avatar, setAvatar] = useState('');
+  const [frontDoc, setFrontDoc] = useState('');
+  const [backDoc, setBackDoc] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [usersList, setUsersList] = useState([]);
-  const [rem, setRem] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleValidation = type => {};
+  let number = route.params.number;
 
-  const onFocusHandler = arg => {};
+  console.log(number);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      getUserByPhone(number);
+    });
+    return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
 
   const uploadHandler = () => {
-    navigation.navigate(facial);
+    if (avatar === '') {
+      setErrorMessage('You must upload an image of you to proceed');
+      return;
+    }
+    try {
+      const url = '/UploadFile';
+      const payload = {
+        file_extention: 'png',
+        file_base64: avatar,
+        userid: '2022012110473908038493827',
+        phone: number,
+        fileCat: 'MOI1-FRONT',
+      };
+    } catch (err) {}
   };
   const skipHandler = () => {
     navigation.navigate(dash);
+  };
+
+  const getUserByPhone = async phone => {
+    try {
+      const url = `/GetUserByPhone/${phone}`;
+      const response = await get_request(url);
+      if (response) {
+        console.log(response);
+        // navigation.navigate(dash);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

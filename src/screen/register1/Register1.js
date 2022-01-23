@@ -14,9 +14,10 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {post_request} from '../../services/makeRequest';
 
 const sexOption = ['Male', 'Female'];
-const RegisterScreen1 = ({navigation}) => {
+const RegisterScreen1 = ({navigation, route}) => {
   const [email, setEmail] = useState('');
   const [fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
@@ -26,6 +27,11 @@ const RegisterScreen1 = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [accepted, setAccepted] = useState(false);
   const [gender, setGender] = useState();
+  const [loading, setLoading] = useState(false);
+
+  let number = route.params.phonenumber;
+
+  console.log(number);
 
   const handleValidation = type => {
     if (type === 'password') {
@@ -59,11 +65,9 @@ const RegisterScreen1 = ({navigation}) => {
     }
   };
 
-  const submitHandler = () => {
-    console.log('Submit Handler');
-    // navigation.navigate(register2);
+  const submitHandler = async () => {
     if (fullname === '') {
-      setErrorMessage('Enter name in full');
+      setErrorMessage('Enter name in full, surname last.');
       return;
     }
     if (email === '') {
@@ -91,22 +95,30 @@ const RegisterScreen1 = ({navigation}) => {
       setErrorMessage('Enter first name and last name');
       return;
     }
+    setLoading(true);
     try {
-      const url = 'https://fastcredit-ng.com:1102/v1/coreapi/createuser';
+      const url = '/createuser';
 
       const payload = {
         firstname: names[0],
         lastname: names[names.length - 1],
         middlename: names.length > 2 ? names[1] : '',
         gender: gender,
-        phone: '080384938270',
+        phone: number,
         email: email,
         password: password,
         pin: pin,
         verified: 'Y',
       };
       console.log(payload);
+      const response = await post_request(url, payload);
+      if (response) {
+        console.log(response);
+        navigation.navigate(register2, {number});
+        setLoading(false);
+      }
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
     console.log('Submit Handler...');
@@ -204,6 +216,7 @@ const RegisterScreen1 = ({navigation}) => {
           bgColor={Colors.primary}
           txtColor={Colors.white}
           onPress={submitHandler}
+          isLoading={loading}
         />
       </SafeAreaView>
     </>
