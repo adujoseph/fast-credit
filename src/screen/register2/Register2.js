@@ -58,7 +58,7 @@ const RegisterScreen2 = ({navigation, route}) => {
       const url = `/GetUserByPhone/${phone}`;
       const response = await get_request(url);
       if (response) {
-        console.log(response);
+        console.log('GET PHONE: ', response);
         // navigation.navigate(dash);
       }
     } catch (err) {

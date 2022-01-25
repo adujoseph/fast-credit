@@ -16,8 +16,8 @@ const App = () => {
         Client_secret: 'f@3*c#4luser',
       };
       const response = await axios.post(url, payload);
-      console.log(response.data);
-      await AsyncStorage.setItem('token', response.data.token);
+      console.log('Data: ', response.data);
+      await AsyncStorage.setItem('api_token', response.data.token);
     } catch (err) {
       console.log(err);
     }

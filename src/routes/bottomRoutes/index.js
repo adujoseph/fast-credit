@@ -18,11 +18,14 @@ import PaymentScreen from '../../screen/payment/Payment';
 import NotificationScreen from '../../screen/history/History';
 import ProfileScreen from '../../screen/profile/ProfileScreen';
 import DetailsScreen from '../../screen/productDetails/ProductDetails';
+import SupportScreen from '../../screen/support/Support';
+import WalletScreen from '../../screen/wallet/Wallet';
 //icons
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialComm from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const Tabs = createBottomTabNavigator();
 
@@ -66,19 +69,19 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
             {index === 1 && (
               <View style={styles.icon}>
                 {isFocused ? (
-                  <MaterialComm
-                    name="file-document-edit"
+                  <AntDesign
+                    name="customerservice"
                     color={Colors.primary}
                     size={iconSize}
                   />
                 ) : (
-                  <MaterialComm
-                    name="file-document-edit"
+                  <AntDesign
+                    name="customerservice"
                     color={Colors.gray}
                     size={iconSize}
                   />
                 )}
-                <Text>Payment</Text>
+                <Text>Support</Text>
               </View>
             )}
 
@@ -99,30 +102,10 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
                     solid
                   />
                 )}
-                <Text>Plan</Text>
+                <Text>Wallet</Text>
               </View>
             )}
             {index === 3 && (
-              <View style={styles.icon}>
-                {isFocused ? (
-                  <MaterialComm
-                    name="office-building"
-                    color={Colors.primary}
-                    size={iconSize}
-                    solid
-                  />
-                ) : (
-                  <MaterialComm
-                    name="office-building"
-                    color={Colors.gray}
-                    size={iconSize}
-                    solid
-                  />
-                )}
-                <Text>Activity</Text>
-              </View>
-            )}
-            {index === 4 && (
               <View style={styles.icon}>
                 {isFocused ? (
                   <Ionicons
@@ -139,7 +122,27 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
                     solid
                   />
                 )}
-                <Text>Profile</Text>
+                <Text>Person</Text>
+              </View>
+            )}
+            {index === 4 && (
+              <View style={styles.icon}>
+                {isFocused ? (
+                  <MaterialComm
+                    name="office-building"
+                    color={Colors.primary}
+                    size={iconSize}
+                    solid
+                  />
+                ) : (
+                  <MaterialComm
+                    name="office-building"
+                    color={Colors.gray}
+                    size={iconSize}
+                    solid
+                  />
+                )}
+                <Text>More</Text>
               </View>
             )}
           </TouchableOpacity>
@@ -160,10 +163,10 @@ const BottomTabBottom = () => {
         inactiveTintColor: Colors.dark,
       }}>
       <Tabs.Screen name={Home} component={HomeScreen} />
-      <Tabs.Screen name={payment} component={PaymentScreen} />
+      <Tabs.Screen name={payment} component={SupportScreen} />
       <Tabs.Screen
         name={'notify'}
-        component={NotificationScreen}
+        component={WalletScreen}
         options={{
           tabBarColor: '#9a2c31',
           style: {backgroundColor: 'red'},

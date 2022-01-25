@@ -3,7 +3,8 @@ import {View, StyleSheet, Image} from 'react-native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {connect} from 'react-redux';
 import * as Animatable from 'react-native-animatable';
-import {login} from '../../constant/contant';
+import {login, loginscreen, dash} from '../../constant/contant';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SplashScreen = ({navigation, currentLang}) => {
   useEffect(() => {
@@ -14,8 +15,22 @@ const SplashScreen = ({navigation, currentLang}) => {
   }, [navigation]);
 
   const handleRouteOptions = async () => {
-    navigation.replace(login);
+    const token = await AsyncStorage.getItem('token');
+    const isFirstTime = JSON.parse(await AsyncStorage.getItem('firstLaunch'));
+
+    if (!isFirstTime) {
+      navigation.replace(login);
+    } else {
+      if (token) {
+        //get user details
+        //navigate to dashboard
+        navigation.replace(dash);
+      } else {
+        navigation.replace(loginscreen);
+      }
+    }
   };
+
   return (
     <>
       <View style={styles.container}>

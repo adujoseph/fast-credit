@@ -12,7 +12,8 @@ import TextField from '../../components/TextField';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {activeUser} from '../../store/actions/UserAction/UserAction';
-import {post_request, get_request} from '../../services/makeRequest';
+import {auth_request} from '../../services/authRequest';
+import {get_request} from '../../services/makeRequest';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({navigation, activeUser}) => {
@@ -80,33 +81,40 @@ const LoginScreen = ({navigation, activeUser}) => {
       return;
     }
     setLoading(true);
-    const phone = `0${Number(phoneNumber)}` || `234${Number(phoneNumber)}`;
-
+    const phone_ = `234${Number(phoneNumber)}`;
     try {
       let url = '/applogin';
       let payload = {
-        phone,
+        phone: phone_,
         password,
       };
-      const response = await post_request(url, payload);
-      if (response) {
+      console.log(payload, 'submit');
+      const response = await auth_request(url, payload);
+      if (response.status === 200) {
         getUserByPhone(phone);
+        let token = response.data.token;
+        await AsyncStorage.setItem('token', token);
+        // add token to async storage
         setLoading(false);
+      } else {
+        setLoading(false);
+        setErrorMessage(response.data.message);
       }
     } catch (err) {
       console.log('My Error: ', err);
       setLoading(false);
     }
-    //navigation.navigate(dash);
   };
 
   const getUserByPhone = async phone => {
     try {
       const url = `/GetUserByPhone/${phone}`;
       const response = await get_request(url);
-      if (response) {
+      if (response.status === 200) {
         console.log(response);
         navigation.navigate(dash);
+      } else {
+        setErrorMessage('User details not found');
       }
     } catch (err) {
       console.log(err);
@@ -205,6 +213,7 @@ const LoginScreen = ({navigation, activeUser}) => {
             bgColor={Colors.primary}
             txtColor={Colors.white}
             onPress={submitHandler}
+            isLoading={loading}
           />
           <CustomButton
             title="Create Account"

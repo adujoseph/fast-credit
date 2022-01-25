@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, StatusBar, Image, Text} from 'react-native';
 import {Colors} from '../../constant/theme';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -8,8 +8,15 @@ import * as Animatable from 'react-native-animatable';
 import {Dash, loginscreen, phone, register1} from '../../constant/contant';
 import CustomButton from '../../components/Button';
 import Video from 'react-native-video';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = ({navigation, currentLang}) => {
+const WelcomeScreen = ({navigation, currentLang}) => {
+  useEffect(() => {
+    firstLaunch();
+  }, []);
+  const firstLaunch = async () => {
+    await AsyncStorage.setItem('firstLaunch', JSON.stringify(true));
+  };
   return (
     <>
       <View style={styles.container}>
@@ -22,25 +29,9 @@ const LoginScreen = ({navigation, currentLang}) => {
           rate={1.0}
           ignoreSilentSwitch={'obey'}
         />
-
-        {/* <View style={styles.topHalf}>
-          <Image
-            source={require('../../../assets/images/bg1.png')}
-            style={{width: '100%', resizeMode: 'contain'}}
-          />
-
-        </View> */}
         <View style={{flex: 0.7}}></View>
         <View style={styles.bottomHalf}>
           <View style={styles.btns}>
-            {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={styles.title}>Welcome to FastCredit</Text>
-              <Text style={styles.subtitle}>
-                Need to Fuel your dreams? Get up to 3 million in less than 24
-                hours
-              </Text>
-            </View> */}
-
             <CustomButton
               title="Login Now"
               bgColor={Colors.primary}
@@ -48,7 +39,6 @@ const LoginScreen = ({navigation, currentLang}) => {
               borderColor={Colors.primary}
               onPress={() => navigation.navigate(loginscreen)}
             />
-
             <CustomButton
               title="Create Account"
               bgColor={Colors.white}
@@ -67,7 +57,7 @@ const mapStateToProps = state => {
     currentLang: state.user.setLanguage,
   };
 };
-export default connect(mapStateToProps, null)(LoginScreen);
+export default connect(mapStateToProps, null)(WelcomeScreen);
 
 const styles = StyleSheet.create({
   container: {

@@ -14,7 +14,7 @@ import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {post_request} from '../../services/makeRequest';
+import {auth_request} from '../../services/authRequest';
 
 const sexOption = ['Male', 'Female'];
 const RegisterScreen1 = ({navigation, route}) => {
@@ -30,8 +30,6 @@ const RegisterScreen1 = ({navigation, route}) => {
   const [loading, setLoading] = useState(false);
 
   let number = route.params.phonenumber;
-
-  console.log(number);
 
   const handleValidation = type => {
     if (type === 'password') {
@@ -111,10 +109,10 @@ const RegisterScreen1 = ({navigation, route}) => {
         verified: 'Y',
       };
       console.log(payload);
-      const response = await post_request(url, payload);
+      const response = await auth_request(url, payload);
       if (response) {
         console.log(response);
-        navigation.navigate(register2, {number});
+        // navigation.navigate(register2, {number});
         setLoading(false);
       }
     } catch (err) {
@@ -136,7 +134,7 @@ const RegisterScreen1 = ({navigation, route}) => {
           onChangeText={text => setFullname(text)}
           placeholder="Name in full"
           validated={isEmail}
-          onFocus={() => onFocusHandler('email')}
+          onFocus={() => onFocusHandler('name')}
           // onBlur={() => handleValidation('email')}
           iconName="person"
         />
@@ -156,7 +154,7 @@ const RegisterScreen1 = ({navigation, route}) => {
           onChangeText={text => setPin(text)}
           placeholder="Transaction Pin"
           validated={isEmail}
-          onFocus={() => onFocusHandler('email')}
+          onFocus={() => onFocusHandler('pin')}
           // onBlur={() => handleValidation('email')}
           iconName="phone-portrait"
         />
@@ -166,7 +164,7 @@ const RegisterScreen1 = ({navigation, route}) => {
           onChangeText={text => setPassword(text)}
           placeholder="Create Password"
           validated={isEmail}
-          onFocus={() => onFocusHandler('email')}
+          onFocus={() => onFocusHandler('password')}
           // onBlur={() => handleValidation('email')}
           iconName="lock-closed"
           secureTextEntry={true}
