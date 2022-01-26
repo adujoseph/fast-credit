@@ -13,6 +13,7 @@ import {dash, facial} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import {get_request} from '../../services/makeRequest';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const RegisterScreen2 = ({navigation, route}) => {
   const [avatar, setAvatar] = useState('');
@@ -66,17 +67,60 @@ const RegisterScreen2 = ({navigation, route}) => {
     }
   };
 
+  const avatarUpload = () => {
+    console.log('Upload');
+    let options = {
+      title: 'You can choose one image',
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    launchCamera(options, response => {
+      const data = new FormData();
+      data.append('name', 'Image Upload');
+      data.append('file_attachment', response);
+      console.log(response);
+    });
+    //   launchCamera(options, response => {
+    //     if (response.didCancel) {
+    //       console.log('User cancelled photo picker');
+    //     } else if (response.error) {
+    //       console.log('ImagePicker Error: ', response.error);
+    //     } else if (response.customButton) {
+    //       console.log('User tapped custom button: ', response.customButton);
+    //     } else {
+    //       let source = response.assets[0].uri;
+    //       let upload = {
+    //         uri: source,
+    //         type: `image/${source.split('.')[2]}`,
+    //         name: source.substring(source.lastIndexOf('/') + 1),
+    //       };
+    //       // setProfileImg(source);
+    //       // handleUpload(upload);
+    //       // let img = 'data:image/jpeg;base64,' + response.assets[0].uri;
+    //       // upDateImage(img);
+    //       // console.log('Response Camera', response.assets[0].uri);
+    //     }
+    //   });
+    // }
+  };
+  const documentFront = () => {};
+  const documentBack = () => {};
+
   return (
     <>
       <SafeAreaView style={styles.container}>
         <View style={styles.wrapblock}>
-          <TouchableOpacity style={styles.block}>
+          <TouchableOpacity style={styles.block} onPress={avatarUpload}>
             <Text>Capture face</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.block}>
+          <TouchableOpacity style={styles.block} onPress={documentFront}>
             <Text>Upload doc (front view)</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.block}>
+          <TouchableOpacity style={styles.block} onPress={documentBack}>
             <Text>Upload doc (back view)</Text>
           </TouchableOpacity>
         </View>
@@ -85,6 +129,7 @@ const RegisterScreen2 = ({navigation, route}) => {
           bgColor={Colors.primary}
           txtColor={Colors.white}
           onPress={uploadHandler}
+          isLoading={loading}
         />
         <CustomButton
           title="Skip for now"

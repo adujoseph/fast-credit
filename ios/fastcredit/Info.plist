@@ -43,6 +43,12 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+    <string>${PRODUCT_NAME} Camera Usage</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>${PRODUCT_NAME} PhotoLibrary Usage</string>
+    <key>NSVideoSubscriberAccountUsageDescription</key>
+    <string>${PRODUCT_NAME} Video Subscribe Usage</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

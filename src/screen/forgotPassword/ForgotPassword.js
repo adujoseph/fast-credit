@@ -11,61 +11,64 @@ import TextField from '../../components/TextField';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {activeUser} from '../../store/actions/UserAction/UserAction';
+import {get_request} from '../../services/makeRequest';
 
 const ForgotPassword = ({navigation, activeUser}) => {
-  const [email, setEmail] = useState('08093443109');
-  const [isEmail, setIsEmail] = useState(false);
-  const [password, setPassword] = useState('');
-  const [isPassword, setIsPassword] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isPhone, setIsPhone] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [usersList, setUsersList] = useState([]);
-  const [rem, setRem] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [phone, setPhone] = useState('');
 
-  useEffect(() => {
-    fetchUserList();
-  }, []);
-
-  const fetchUserList = async () => {
-    try {
-      const url = 'https://jsonplaceholder.typicode.com/users';
-      const response = await axios.get(url);
-      setUsersList(response.data);
-    } catch (err) {
-      setErrorMessage('Error in connection, try again');
-      console.log('Fetch User Error: ', err);
-    }
-  };
+  useEffect(() => {}, []);
 
   const handleValidation = type => {
-    if (type === 'password') {
-      if (password.length > 3) {
-        setIsPassword(true);
+    if (type === 'phone_number') {
+      if (phoneNumber.length > 10) {
+        setIsPhone(true);
       } else {
-        setErrorMessage('password must be at least 3 characters');
-      }
-    } else if (type === 'email') {
-      if (email) {
-        setIsEmail(true);
-      } else {
-        setErrorMessage('email field cannot be empty');
+        setErrorMessage('inavlid phone number');
       }
     }
   };
 
   const onFocusHandler = arg => {
     setErrorMessage('');
-    if (arg === 'email') {
-      setEmail('');
-    }
-    if (arg === 'password') {
-      setPassword('');
+    if (arg === 'phone_number') {
+      setPhoneNumber('');
     }
   };
 
-  const submitHandler = () => {
-    navigation.navigate(reset);
+  const submitHandler = async () => {
+    setErrorMessage('');
+    if (phoneNumber === '') {
+      setErrorMessage('Enter phone number');
+      return;
+    }
+    if (phoneNumber.length > 10) {
+      setLoading(true);
+      try {
+        let my_number = `234${Number(phoneNumber)}`;
+        const url = `https://fastcredit-ng.com:1102/v1/coreapi/forgotpassword/${my_number}`;
+        const response = await get_request(url);
+        if (response.status === 200) {
+          console.log('when success: ', response.data.data);
+          navigation.navigate(reset, {phoneNumber});
+        } else if (response.status === 401) {
+          setLoading(false);
+          setErrorMessage('Access denied');
+          console.log('when error: ', response);
+        } else {
+          setLoading(false);
+          setErrorMessage('record not found');
+        }
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    } else {
+      setLoading(false);
+      setErrorMessage('Invalid phone number');
+    }
   };
 
   const routeHandler = () => {
@@ -98,20 +101,20 @@ const ForgotPassword = ({navigation, activeUser}) => {
               elevation: 3,
             }}>
             <TextField
-              label="Email Address"
-              value={email}
-              onChangeText={text => setEmail(text)}
+              label="Enter Phone Number"
+              value={phoneNumber}
+              onChangeText={text => setPhoneNumber(text)}
               placeholder="Enter phone number"
-              validated={isEmail}
-              onFocus={() => onFocusHandler('email')}
-              onBlur={() => handleValidation('email')}
-              iconName="mail"
+              validated={isPhone}
+              onFocus={() => onFocusHandler('phone_number')}
+              onBlur={() => handleValidation('phone_number')}
+              iconName="phone-portrait"
             />
           </View>
 
           <View>
             {errorMessage ? (
-              <Text style={{color: Colors.primary}}>{errorMessage}</Text>
+              <Text style={{color: 'red'}}>{errorMessage}</Text>
             ) : (
               <></>
             )}
@@ -121,6 +124,7 @@ const ForgotPassword = ({navigation, activeUser}) => {
             bgColor={Colors.primary}
             txtColor={Colors.white}
             onPress={submitHandler}
+            isLoading={loading}
           />
           <CustomButton
             title="Create Account"

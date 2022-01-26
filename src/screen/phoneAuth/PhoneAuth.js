@@ -50,7 +50,7 @@ const AuthScreen = ({navigation}) => {
     setLoading(true);
     try {
       const {user} = await confirm.confirm(code);
-      await AsyncStorage.setItem('number', phonenumber);
+      // await AsyncStorage.setItem('number', phonenumber);
       navigation.navigate(register1, {phonenumber});
     } catch (err) {
       setLoading(false);

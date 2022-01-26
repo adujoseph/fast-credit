@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import TextField from '../../components/TextField';
 import CustomButton from '../../components/Button';
@@ -15,11 +16,13 @@ import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {auth_request} from '../../services/authRequest';
+import DatePicker from 'react-native-date-picker';
 
 const sexOption = ['Male', 'Female'];
 const RegisterScreen1 = ({navigation, route}) => {
   const [email, setEmail] = useState('');
-  const [fullname, setFullname] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
   const [password, setPassword] = useState('');
   const [pin, setPin] = useState('');
   const [isEmail, setIsEmail] = useState(false);
@@ -28,6 +31,8 @@ const RegisterScreen1 = ({navigation, route}) => {
   const [accepted, setAccepted] = useState(false);
   const [gender, setGender] = useState();
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   let number = route.params.phonenumber;
 
@@ -49,8 +54,11 @@ const RegisterScreen1 = ({navigation, route}) => {
 
   const onFocusHandler = arg => {
     setErrorMessage('');
-    if (arg === 'name') {
-      setFullname('');
+    if (arg === 'first') {
+      setFirstname('');
+    }
+    if (arg === 'last') {
+      setLastname('');
     }
     if (arg === 'password') {
       setPassword('');
@@ -64,8 +72,12 @@ const RegisterScreen1 = ({navigation, route}) => {
   };
 
   const submitHandler = async () => {
-    if (fullname === '') {
-      setErrorMessage('Enter name in full, surname last.');
+    if (firstname === '') {
+      setErrorMessage('Enter first name.');
+      return;
+    }
+    if (lastname === '') {
+      setErrorMessage('Enter last name.');
       return;
     }
     if (email === '') {
@@ -80,6 +92,10 @@ const RegisterScreen1 = ({navigation, route}) => {
       setErrorMessage('Enter pin');
       return;
     }
+    if (pin.length !== 4) {
+      setErrorMessage('Enter 4 digit pin');
+      return;
+    }
     if (gender === '') {
       setErrorMessage('Select gender');
       return;
@@ -88,31 +104,36 @@ const RegisterScreen1 = ({navigation, route}) => {
       setErrorMessage('Check terms and condition');
       return;
     }
-    let names = fullname.split(' ');
-    if (names.length < 2) {
-      setErrorMessage('Enter first name and last name');
-      return;
-    }
+    // let names = fullname.split(' ');
+    // if (names.length < 2) {
+    //   setErrorMessage('Enter first name and last name');
+    //   return;
+    // }
     setLoading(true);
     try {
       const url = '/createuser';
+      // const newdate = date.toISOString().split('T')[0];
+      // console.log(newdate);
 
       const payload = {
-        firstname: names[0],
-        lastname: names[names.length - 1],
-        middlename: names.length > 2 ? names[1] : '',
+        firstname,
+        lastname,
+        middlename: '',
         gender: gender,
-        phone: number,
+        phone: number.slice(1),
         email: email,
         password: password,
         pin: pin,
         verified: 'Y',
+        dob: date.toISOString().split('T')[0],
       };
       console.log(payload);
       const response = await auth_request(url, payload);
-      if (response) {
+      console.log(response);
+      if (response.status === 200) {
         console.log(response);
-        // navigation.navigate(register2, {number});
+        // handle error before navigation
+        navigation.navigate(register2, {number});
         setLoading(false);
       }
     } catch (err) {
@@ -124,15 +145,26 @@ const RegisterScreen1 = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.labelView}>
           <Text style={styles.labelText}>Create an account to get started</Text>
         </View>
         <TextField
           label="Name in full"
-          value={fullname}
-          onChangeText={text => setFullname(text)}
-          placeholder="Name in full"
+          value={firstname}
+          onChangeText={text => setFirstname(text)}
+          placeholder="First name"
+          validated={isEmail}
+          onFocus={() => onFocusHandler('name')}
+          // onBlur={() => handleValidation('email')}
+          iconName="person"
+        />
+
+        <TextField
+          label="Name in full"
+          value={lastname}
+          onChangeText={text => setLastname(text)}
+          placeholder="Last name"
           validated={isEmail}
           onFocus={() => onFocusHandler('name')}
           // onBlur={() => handleValidation('email')}
@@ -152,7 +184,7 @@ const RegisterScreen1 = ({navigation, route}) => {
           label="Phone Number"
           value={pin}
           onChangeText={text => setPin(text)}
-          placeholder="Transaction Pin"
+          placeholder=" 4 digit Transaction Pin"
           validated={isEmail}
           onFocus={() => onFocusHandler('pin')}
           // onBlur={() => handleValidation('email')}
@@ -169,6 +201,29 @@ const RegisterScreen1 = ({navigation, route}) => {
           iconName="lock-closed"
           secureTextEntry={true}
         />
+        <View>
+          <Text style={styles.title}>Date of Birth</Text>
+          <TouchableOpacity style={styles.datime} onPress={() => setOpen(true)}>
+            <Text>{date.toDateString()}</Text>
+            <Ionicons name="chevron-down" siz={15} />
+          </TouchableOpacity>
+          <DatePicker
+            modal
+            open={open}
+            date={date}
+            mode="date"
+            // minimumDate={new Date()}
+            onDateChange={d => setDate(d)}
+            onConfirm={date => {
+              setOpen(false);
+              console.log(date);
+              setDate(date);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
+        </View>
         <View style={{flexDirection: 'row', marginTop: hp(1)}}>
           {sexOption.map((s, i) => (
             <TouchableOpacity
@@ -216,7 +271,7 @@ const RegisterScreen1 = ({navigation, route}) => {
           onPress={submitHandler}
           isLoading={loading}
         />
-      </SafeAreaView>
+      </ScrollView>
     </>
   );
 };
@@ -224,8 +279,10 @@ export default RegisterScreen1;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: hp(10),
+    marginTop: hp(5),
+    flex: 1,
     marginHorizontal: hp(1),
+    marginBottom: hp(5),
   },
   labelView: {
     paddingVertical: hp(1.5),
@@ -253,5 +310,21 @@ const styles = StyleSheet.create({
   termsText: {
     fontSize: rf(2.3),
     color: Colors.primary,
+  },
+  datime: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: hp(1),
+    borderRadius: 5,
+    borderColor: 'gray',
+    borderWidth: 1,
+    alignItems: 'center',
+    padding: hp(2),
+  },
+  title: {
+    paddingVertical: hp(2),
+    fontWeight: 'bold',
+    fontSize: rf(2.1),
+    marginLeft: hp(1),
   },
 });

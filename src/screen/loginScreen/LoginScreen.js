@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, StatusBar, Text, SafeAreaView} from 'react-native';
+import {View, StyleSheet, StatusBar, SafeAreaView} from 'react-native';
+import {MyText} from '../../components/MyText';
 import {Colors} from '../../constant/theme';
 import {dash, forgot, phone, register1} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -36,7 +37,8 @@ const LoginScreen = ({navigation, activeUser}) => {
 
   const getPhoneNumber = async () => {
     try {
-      const number = await AsyncStorage.setItem('number');
+      const number = await AsyncStorage.getItem('phone_num');
+
       if (number !== undefined) {
         setPhoneNumber(number);
       }
@@ -72,6 +74,7 @@ const LoginScreen = ({navigation, activeUser}) => {
   };
 
   const submitHandler = async () => {
+    setErrorMessage('');
     if (phoneNumber === '') {
       setErrorMessage('phone number field cannot be empty');
       return;
@@ -81,6 +84,7 @@ const LoginScreen = ({navigation, activeUser}) => {
       return;
     }
     setLoading(true);
+    await AsyncStorage.setItem('phone_num', phoneNumber);
     const phone_ = `234${Number(phoneNumber)}`;
     try {
       let url = '/applogin';
@@ -91,10 +95,9 @@ const LoginScreen = ({navigation, activeUser}) => {
       console.log(payload, 'submit');
       const response = await auth_request(url, payload);
       if (response.status === 200) {
-        getUserByPhone(phone);
         let token = response.data.token;
         await AsyncStorage.setItem('token', token);
-        // add token to async storage
+        getUserByPhone(phone_);
         setLoading(false);
       } else {
         setLoading(false);
@@ -110,11 +113,13 @@ const LoginScreen = ({navigation, activeUser}) => {
     try {
       const url = `/GetUserByPhone/${phone}`;
       const response = await get_request(url);
+      console.log(url);
       if (response.status === 200) {
-        console.log(response);
+        console.log(response.data);
         navigation.navigate(dash);
       } else {
         setErrorMessage('User details not found');
+        console.log('Hello: ', response.message);
       }
     } catch (err) {
       console.log(err);
@@ -134,15 +139,16 @@ const LoginScreen = ({navigation, activeUser}) => {
       <SafeAreaView style={styles.container}>
         <View style={styles.btns}>
           <View style={{width: '100%'}}>
-            <Text style={styles.sectionTitle}>Keep connected</Text>
-            <Text
+            <MyText style={styles.sectionTitle}>Keep connected</MyText>
+            <MyText
               style={{
                 width: '80%',
                 paddingVertical: hp(4),
                 lineHeight: hp(3.5),
+                color: 'green',
               }}>
               Enter your phone number and password to get access to your account
-            </Text>
+            </MyText>
           </View>
           <View
             style={{
@@ -151,11 +157,11 @@ const LoginScreen = ({navigation, activeUser}) => {
               elevation: 3,
             }}>
             <TextField
-              label="Email phone number"
+              label="Enter phone number"
               value={phoneNumber}
               onChangeText={text => setPhoneNumber(text)}
               placeholder="Enter phone number"
-              validated={isEmail}
+              // validated={isEmail}
               onFocus={() => onFocusHandler('email')}
               // onBlur={() => handleValidation('email')}
               iconName="phone-portrait"
@@ -194,16 +200,16 @@ const LoginScreen = ({navigation, activeUser}) => {
                   size={15}
                 />
               )}
-              <Text style={{paddingLeft: 10}}>Remember me</Text>
+              <MyText style={{paddingLeft: 10}}>Remember me</MyText>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={forgotHandler}>
-              <Text> Forget Password ?</Text>
+              <MyText> Forget Password ?</MyText>
             </TouchableOpacity>
           </View>
           <View>
             {errorMessage ? (
-              <Text style={{color: Colors.primary}}>{errorMessage}</Text>
+              <MyText style={{color: 'red'}}>{errorMessage}</MyText>
             ) : (
               <></>
             )}
@@ -237,6 +243,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: hp(4),
+    backgroundColor: Colors.white,
   },
   topHalf: {
     flex: 1,

@@ -3,13 +3,56 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  TextInput,
+  // TextInput,
   View,
 } from 'react-native';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../constant/theme';
+import {TextInput} from 'react-native-paper';
+
+// const TextField = ({
+//   label,
+//   value,
+//   onChangeText,
+//   placeholder,
+//   validated,
+//   onFocus,
+//   iconName,
+//   secureTextEntry,
+//   onBlur,
+// }) => {
+//   return (
+//     <>
+//       <View style={[styles.textWrapper]}>
+//         <View style={[styles.iconWrapper]}>
+//           <Ionicons name={iconName} size={20} />
+//         </View>
+//         <View style={[styles.inputWrapper]}>
+//           {/* <Text style={styles.label}>{label}</Text> */}
+//           <TextInput
+//             label={label}
+//             value={value}
+//             onChangeText={onChangeText}
+//             placeholder={placeholder}
+//             onFocus={onFocus}
+//             style={styles.input}
+//             secureTextEntry={secureTextEntry}
+//             onBlur={onBlur}
+//           />
+//         </View>
+//         <View style={[styles.iconWrapper]}>
+//           <Ionicons
+//             name={validated ? 'checkmark-circle' : null}
+//             size={25}
+//             color={validated ? Colors.secondary : 'transparent'}
+//           />
+//         </View>
+//       </View>
+//     </>
+//   );
+// };
 
 const TextField = ({
   label,
@@ -24,34 +67,22 @@ const TextField = ({
 }) => {
   return (
     <>
-      <View style={[styles.textWrapper]}>
-        <View style={[styles.iconWrapper]}>
-          <Ionicons name={iconName} size={20} />
-        </View>
-        <View style={[styles.inputWrapper]}>
-          {/* <Text style={styles.label}>{label}</Text> */}
-          <TextInput
-            value={value}
-            onChangeText={onChangeText}
-            placeholder={placeholder}
-            onFocus={onFocus}
-            style={styles.input}
-            secureTextEntry={secureTextEntry}
-            onBlur={onBlur}
-          />
-        </View>
-        <View style={[styles.iconWrapper]}>
-          <Ionicons
-            name={validated ? 'checkmark-circle' : null}
-            size={25}
-            color={validated ? Colors.secondary : 'transparent'}
-          />
-        </View>
-      </View>
+      <TextInput
+        label={label}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        onFocus={onFocus}
+        style={styles.input}
+        secureTextEntry={secureTextEntry}
+        onBlur={onBlur}
+        underlineColor="#000"
+        activeOutlineColor="green"
+        selectionColor="#000"
+      />
     </>
   );
 };
-
 export default TextField;
 
 const styles = StyleSheet.create({
@@ -59,7 +90,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'lightgray',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
     borderRadius: hp(1),
     margin: hp(1),
     padding: hp(1),
@@ -76,6 +108,8 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     paddingLeft: hp(0.1),
+    marginTop: hp(1),
+    backgroundColor: 'transparent',
   },
   label: {
     fontSize: rf(2.1),

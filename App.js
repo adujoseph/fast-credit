@@ -10,7 +10,7 @@ const store = configureStore();
 const App = () => {
   (async function getAppToken() {
     try {
-      const url = 'https://fastcredit-ng.com:1102/v1/fclapi/login';
+      const url = 'https://apicore.fastcredit-ng.com/v1/fclapi/login';
       const payload = {
         Client_key: 'fcluser',
         Client_secret: 'f@3*c#4luser',

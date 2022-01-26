@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, StatusBar, Text, SafeAreaView} from 'react-native';
 import {Colors} from '../../constant/theme';
-import {dash, phone, register1} from '../../constant/contant';
+import {dash, loginscreen, phone, register1} from '../../constant/contant';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {RFPercentage as rf} from 'react-native-responsive-fontsize';
 import {connect} from 'react-redux';
@@ -11,69 +11,74 @@ import TextField from '../../components/TextField';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {activeUser} from '../../store/actions/UserAction/UserAction';
+import {post_request} from '../../services/makeRequest';
 
-const ResetPasswordScreen = ({navigation, activeUser}) => {
-  const [email, setEmail] = useState('08093443109');
-  const [isEmail, setIsEmail] = useState(false);
-  const [password, setPassword] = useState('');
-  const [isPassword, setIsPassword] = useState(false);
+const ResetPasswordScreen = ({navigation, activeUser, route}) => {
+  const [code, setCode] = useState('');
+  const [pass1, setPass1] = useState('');
+  const [pass2, setPass2] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [usersList, setUsersList] = useState([]);
-  const [rem, setRem] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState(route.params.phoneNumber);
 
-  useEffect(() => {
-    fetchUserList();
-  }, []);
+  console.log(phone);
 
-  const fetchUserList = async () => {
-    try {
-      const url = 'https://jsonplaceholder.typicode.com/users';
-      const response = await axios.get(url);
-      setUsersList(response.data);
-    } catch (err) {
-      setErrorMessage('Error in connection, try again');
-      console.log('Fetch User Error: ', err);
-    }
-  };
-
-  const handleValidation = type => {
-    if (type === 'password') {
-      if (password.length > 3) {
-        setIsPassword(true);
-      } else {
-        setErrorMessage('password must be at least 3 characters');
-      }
-    } else if (type === 'email') {
-      if (email) {
-        setIsEmail(true);
-      } else {
-        setErrorMessage('email field cannot be empty');
-      }
-    }
-  };
+  useEffect(() => {}, []);
 
   const onFocusHandler = arg => {
     setErrorMessage('');
-    if (arg === 'email') {
-      setEmail('');
+    if (arg === 'code') {
+      setCode('');
     }
-    if (arg === 'password') {
-      setPassword('');
+    if (arg === 'pass1') {
+      setPass1('');
+    }
+    if (arg === 'pass2') {
+      setPass2('');
     }
   };
 
-  const submitHandler = () => {
-    navigation.navigate(dash);
-  };
-
-  const routeHandler = () => {
-    navigation.navigate(phone);
-  };
-
-  const handleChangeText = async item => {
-    // setPhone(item);
+  const submitHandler = async () => {
+    if (code === '') {
+      setErrorMessage('Enter code');
+      return;
+    }
+    if (pass1 === '') {
+      setErrorMessage('Enter password');
+      return;
+    }
+    if (pass2 === '') {
+      setErrorMessage('Confirm password');
+      return;
+    }
+    if (pass1 === pass2) {
+      setLoading(true);
+      try {
+        const url = `/ResetPassword`;
+        const payload = {
+          phone: `234${Number(phone)}`,
+          otp: code,
+          password: pass1,
+        };
+        console.log(payload);
+        const response = await post_request(url, payload);
+        if (response.status === 200) {
+          console.log('when success: ', response);
+          navigation.navigate(loginscreen);
+        } else if (response.status === 401) {
+          setLoading(false);
+          setErrorMessage('Access denied');
+          console.log('when error: ', response);
+        } else {
+          setLoading(false);
+          setErrorMessage('record not found');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      setErrorMessage('Password does not match');
+    }
   };
 
   return (
@@ -100,13 +105,13 @@ const ResetPasswordScreen = ({navigation, activeUser}) => {
             }}>
             <TextField
               label="Email Address"
-              value={email}
-              onChangeText={text => setEmail(text)}
+              value={code}
+              onChangeText={text => setCode(text)}
               placeholder="Enter Reset Code"
-              validated={isEmail}
-              onFocus={() => onFocusHandler('email')}
-              onBlur={() => handleValidation('email')}
-              secureTextEntry={true}
+              // validated={isEmail}
+              onFocus={() => onFocusHandler('code')}
+              // onBlur={() => handleValidation('email')}
+              secureTextEntry={false}
               iconName="lock-closed-outline"
             />
           </View>
@@ -118,12 +123,12 @@ const ResetPasswordScreen = ({navigation, activeUser}) => {
             }}>
             <TextField
               label="Email Address"
-              value={email}
-              onChangeText={text => setEmail(text)}
+              value={pass1}
+              onChangeText={text => setPass1(text)}
               placeholder="Enter New Password"
-              validated={isEmail}
-              onFocus={() => onFocusHandler('email')}
-              onBlur={() => handleValidation('email')}
+              // validated={isEmail}
+              onFocus={() => onFocusHandler('pass1')}
+              // onBlur={() => handleValidation('email')}
               secureTextEntry={true}
               iconName="lock-closed-outline"
             />
@@ -136,12 +141,12 @@ const ResetPasswordScreen = ({navigation, activeUser}) => {
             }}>
             <TextField
               label="Password"
-              value={password}
-              onChangeText={text => setPassword(text)}
+              value={pass2}
+              onChangeText={text => setPass2(text)}
               placeholder="Confirm New Password"
-              validated={isPassword}
-              onFocus={() => setPassword('')}
-              onBlur={() => handleValidation('password')}
+              // validated={isPassword}
+              onFocus={() => onFocusHandler('pass2')}
+              // onBlur={() => handleValidation('password')}
               iconName="lock-closed-outline"
               secureTextEntry={true}
             />
@@ -158,6 +163,7 @@ const ResetPasswordScreen = ({navigation, activeUser}) => {
             bgColor={Colors.primary}
             txtColor={Colors.white}
             onPress={submitHandler}
+            isLoading={loading}
           />
         </View>
       </SafeAreaView>
